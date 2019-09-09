@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -48,16 +49,14 @@ namespace ConApp.Services
 
         public string GenerateParallel()
         {
+            var bag = new ConcurrentBag<char>();
             Parallel.ForEach(_parallelQuery, (item) =>
             {
-                _stringBuilder.Append((char)StaticRnd.Next(127 + 1));
+                bag.Add((char)_rnd.Next(127 + 1));
             });
 
-            var result = _stringBuilder.ToString();
+            return new string(bag.ToArray());
 
-            _stringBuilder.Clear();
-
-            return result;
         }
 
         public static string Generate(int stringLen)

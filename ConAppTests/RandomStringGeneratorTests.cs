@@ -14,7 +14,7 @@ namespace ConAppTests
         [SetUp]
         public void Setup()
         {
-            _stringGenerator = new RandomStringGenerator(1_000_000);
+            _stringGenerator = new RandomStringGenerator(1_000_000_000);
         }
 
         [Test]
@@ -34,7 +34,13 @@ namespace ConAppTests
         [Test]
         public void GenerateParallel_test()
         {
+            var timer = Stopwatch.StartNew();
+
             var generatedStr = _stringGenerator.GenerateParallel();
+            timer.Stop();
+
+            Console.WriteLine($"\"{nameof(_stringGenerator.GenerateParallel)}\" " +
+                              $"elapsed = {timer.Elapsed.TotalMilliseconds} ms, {timer.Elapsed.TotalSeconds} s");
 
             Assert.IsNotNull(generatedStr);
         }
@@ -49,7 +55,7 @@ namespace ConAppTests
             var inlineGeneratedStr = _stringGenerator.Generate();
 
             timer.Stop();
-            elapsedInfoTimes.Add(nameof(_stringGenerator.Generate),timer.Elapsed);
+            elapsedInfoTimes.Add(nameof(_stringGenerator.Generate), timer.Elapsed);
 
             timer.Restart();
             var parallelGeneratedStr = _stringGenerator.GenerateParallel();
@@ -64,7 +70,7 @@ namespace ConAppTests
 
             Assert.IsNotNull(inlineGeneratedStr);
             Assert.IsNotNull(parallelGeneratedStr);
-            Assert.AreNotEqual(inlineGeneratedStr,parallelGeneratedStr);
+            Assert.AreNotEqual(inlineGeneratedStr, parallelGeneratedStr);
         }
 
         [Test]
